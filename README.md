@@ -1,20 +1,35 @@
-venv
-pip install -r requirements.txt
+# Flask API 
 
-Flask
-flask-sqlalchemy
-flask-migrate
+This repository demonstrates a solid foundation for building a protected API with Flask.
 
-elasticbeanstalk
+## References
 
+* [The Flask Mega Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world) by Miguel Grinberg.
+* [Designing a RESTful API with Python and Flask](https://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask) by Miguel Grinberg.
 
-# Migrate Database
+## Setup Environment
 
+Configure a virtual environment, activate it and then install the requirements.
+
+```bash
+$ virtualenv venv -p python3
+$ . venv/bin/activate
+$ pip install -r requirements.txt
+```
+
+Initialize and then migrate a local SQLite database, you should then see a local *app.db* file.  
+
+```bash
 $ flask db init
 $ flask db migrate
 $ flask db upgrade
+```
 
-# Add a user
+You can view the database with [DB Browser for SQLite](https://sqlitebrowser.org/) or IntelliJ also has a plugin.
+
+## Running the app
+
+### Add a user via Flask Shell
 
 $ flask shell
 >>> from werkzeug.security import generate_password_hash
@@ -22,17 +37,14 @@ $ flask shell
 >>> db.session.commit()
 >>> exit()
 
-# View database
+### Run 
 
-https://github.com/sqlitebrowser/sqlitebrowser
--or-
-use intellij
-
-# Run 
-
+```bash
 $ flask run
-
+$ curl localhost:5000/api/users
+{"users":[{"email":"steven@example.com","id":2,"username":"steven"}]}
+```
 
 # Questions
 
-SQLAlchemy results to JSON
+* What is a better way to convert SQLAlchemy results to JSON?
