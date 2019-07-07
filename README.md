@@ -31,11 +31,13 @@ You can view the database with [DB Browser for SQLite](https://sqlitebrowser.org
 
 ### Add a user via Flask Shell
 
+```bash
 $ flask shell
 >>> from werkzeug.security import generate_password_hash
 >>> db.session.add(User(username='steven', email='steven@example.com', password=generate_password_hash('pass')))
 >>> db.session.commit()
 >>> exit()
+```
 
 ### Run 
 
