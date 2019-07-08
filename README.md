@@ -50,3 +50,4 @@ $ curl localhost:5000/api/users
 # Questions
 
 * What is a better way to convert SQLAlchemy results to JSON?
+* Intelli sense? Click to follow method prototypes?
