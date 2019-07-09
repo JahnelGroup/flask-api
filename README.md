@@ -56,7 +56,7 @@ Using [HTTPie](https://httpie.org/) here is a how you can register a new user an
 Register a new user.
 
 ```bash
-$ http POST :5000/registerUser username=steven password=pass email=szgaljic@jahnelgroup.com
+$ http POST :5000/api/registerUser username=steven password=pass email=szgaljic@jahnelgroup.com
 HTTP/1.0 201 CREATED
 Content-Length: 57
 Content-Type: application/json
@@ -75,7 +75,7 @@ Server: Werkzeug/0.15.4 Python/3.7.3
 Acquire a token.
 
 ```bash
-$ http -asteven:pass GET http://localhost:5000/auth/token
+$ http -asteven:pass GET http://localhost:5000/api/auth/token
 HTTP/1.0 200 OK
 Content-Length: 193
 Content-Type: application/json
@@ -93,7 +93,7 @@ Server: Werkzeug/0.15.4 Python/3.7.3
 Get your account info.
 
 ```bash
-$ http -aeyJhbGciOiJIUzUxMiIsImlhdCI6MTU2MjYzNjQ5NywiZXhwIjoxNTYyNjM3MDk3fQ.eyJpZCI6MX0.IXBjsz-uH43fGk5qqELjEupRMda1RzHobazafFVzTut0h40GfVttGSOJy9IvsTT2z8vcqTgYleZMbgC9nXozjQ:x GET http://localhost:5000/users/me
+$ http -aeyJhbGciOiJIUzUxMiIsImlhdCI6MTU2MjYzNjQ5NywiZXhwIjoxNTYyNjM3MDk3fQ.eyJpZCI6MX0.IXBjsz-uH43fGk5qqELjEupRMda1RzHobazafFVzTut0h40GfVttGSOJy9IvsTT2z8vcqTgYleZMbgC9nXozjQ:x GET http://localhost:5000/api/users/me
 HTTP/1.0 200 OK
 Content-Length: 57
 Content-Type: application/json
