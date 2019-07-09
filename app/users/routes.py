@@ -32,7 +32,6 @@ def get_user(username):
 # Create a user
 #
 @bp.route('/registerUser', methods=['POST'])
-@auth.login_required
 def register_user():
     username = request.json.get('username')
     password = request.json.get('password')
