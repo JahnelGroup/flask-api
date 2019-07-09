@@ -18,6 +18,8 @@ $ . venv/bin/activate
 $ pip install -r requirements.txt
 ```
 
+To display your python installed libraries run `pip freeze`.
+
 Initialize and then migrate a local SQLite database, you should then see a local *app.db* file.  
 
 ```bash
@@ -26,7 +28,7 @@ $ flask db migrate
 $ flask db upgrade
 ```
 
-You can view the database with [DB Browser for SQLite](https://sqlitebrowser.org/) or IntelliJ also has a plugin.
+You should now see a file called **app.db**. You can view the database with [DB Browser for SQLite](https://sqlitebrowser.org/) or IntelliJ also has a plugin.
 
 ## Running the app
 
