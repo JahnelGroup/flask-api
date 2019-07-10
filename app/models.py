@@ -1,3 +1,4 @@
+from flask import current_app
 from app import db, ma
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import (TimedJSONWebSignatureSerializer
@@ -20,16 +21,14 @@ class User(db.Model):
         return check_password_hash(self.password, password)
 
     def generate_auth_token(self, expiration=600):
-        # TODO: Inject this value somehow.
-        # s = Serializer(application.config['SECRET_KEY'], expires_in=expiration)
-        s = Serializer('super-secret', expires_in=expiration)
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+        # s = Serializer('super-secret', expires_in=expiration)
         return s.dumps({'id': self.id})
 
     @staticmethod
     def verify_auth_token(token):
-        # TODO: Inject this value somehow.
-        # s = Serializer(app.config['SECRET_KEY'])
-        s = Serializer('super-secret')
+        s = Serializer(current_app.config['SECRET_KEY'])
+        # s = Serializer('super-secret')
         try:
             data = s.loads(token)
         except SignatureExpired:
