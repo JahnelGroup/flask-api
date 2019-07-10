@@ -5,7 +5,15 @@ import enum
 
 
 #
-# BaseModel
+# Enum: User Type
+#
+class UserType(enum.Enum):
+    admin = "admin"
+    user = "user"
+
+
+#
+# Model: Base
 #
 class BaseModel(db.Model):
     __abstract__ = True
@@ -15,15 +23,7 @@ class BaseModel(db.Model):
 
 
 #
-# UserType
-#
-class UserType(enum.Enum):
-    admin = "admin"
-    user = "user"
-
-
-#
-# User
+# Model: User
 #
 class User(BaseModel):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,8 +40,3 @@ class User(BaseModel):
 
     def verify_password(self, password):
         return check_password_hash(self.password, password)
-
-
-
-
-
