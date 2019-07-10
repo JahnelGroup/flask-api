@@ -3,6 +3,7 @@ from flask_httpauth import HTTPBasicAuth
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 
 
 db = SQLAlchemy()
@@ -22,6 +23,7 @@ def create_app(config_class=Config):
 
     from app.users import bp as users_bp
     application.register_blueprint(users_bp, url_prefix="/api")
+    CORS(application, resources={r"/*": {"origins": "http://localhost:4200"}})
 
     return application
 
