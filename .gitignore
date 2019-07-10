@@ -138,3 +138,7 @@ dmypy.json
 node_modules/
 jspm_packages/
 .serverless/
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
