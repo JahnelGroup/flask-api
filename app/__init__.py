@@ -21,6 +21,9 @@ def create_app(config_class=Config):
     ma.init_app(application)
     migrate.init_app(application, db)
 
+    from app.error import bp as error_bp
+    application.register_blueprint(error_bp)
+
     from app.authentication import bp as authentication_bp
     application.register_blueprint(authentication_bp, url_prefix="/api")
 
