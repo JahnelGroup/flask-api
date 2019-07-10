@@ -1,7 +1,8 @@
 from flask import jsonify, abort, request, g, url_for
 from app import auth, db
-from app.users import bp
+from app.user import bp
 from app.models import User, UserSchema
+import app.user.user_service as users_service
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
@@ -24,7 +25,7 @@ def register_user():
     db.session.commit()
 
     return (user_schema.dump(user).data, 201,
-            {'Location': url_for('users.get_user', username=user.username, _external=True)})
+            {'Location': url_for('user.get_user', username=user.username, _external=True)})
 
 
 #

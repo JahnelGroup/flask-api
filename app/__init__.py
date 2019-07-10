@@ -24,8 +24,8 @@ def create_app(config_class=Config):
     from app.authentication import bp as authentication_bp
     application.register_blueprint(authentication_bp, url_prefix="/api")
 
-    from app.users import bp as users_bp
-    application.register_blueprint(users_bp, url_prefix="/api")
+    from app.user import bp as user_bp
+    application.register_blueprint(user_bp, url_prefix="/api")
 
     CORS(application, resources={r"/*": {"origins": "http://localhost:4200"}})
 
