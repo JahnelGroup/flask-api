@@ -5,6 +5,26 @@ from app.models import User
 
 
 #
+# Create a user
+#
+@bp.route('/registerUser', methods=['POST'])
+def register_user():
+    username = request.json.get('username')
+    password = request.json.get('password')
+    email = request.json.get('email')
+    if username is None or password is None or email is None:
+        abort(400)  # missing arguments
+    if User.query.filter_by(username=username).first() is not None:
+        abort(400)  # existing user
+    user = User(username=username, email=email)
+    user.set_password(password)
+    db.session.add(user)
+    db.session.commit()
+    return (jsonify(user.serialize), 201,
+            {'Location': url_for('users.get_user', username=user.username, _external=True)})
+
+
+#
 # Get current logged in user
 #
 @bp.route('/users/me')
@@ -29,20 +49,15 @@ def get_user(username):
 
 
 #
-# Create a user
+# Remove user
 #
-@bp.route('/registerUser', methods=['POST'])
-def register_user():
-    username = request.json.get('username')
-    password = request.json.get('password')
-    email = request.json.get('email')
-    if username is None or password is None or email is None:
-        abort(400)  # missing arguments
-    if User.query.filter_by(username=username).first() is not None:
-        abort(400)  # existing user
-    user = User(username=username, email=email)
-    user.set_password(password)
-    db.session.add(user)
+@bp.route('/users/me', methods=['DELETE'])
+@auth.login_required
+def remove_user():
+    user = User.query.filter_by(username=g.user.username).first()
+    if user is None:
+        abort(404)  # missing arguments
+
+    db.session.delete(user)
     db.session.commit()
-    return (jsonify(user.serialize), 201,
-            {'Location': url_for('users.get_user', username=user.username, _external=True)})
+    return '', 200
