@@ -9,6 +9,7 @@ This repository demonstrates a solid foundation for building a protected API wit
 * [RESTful Authentication with Flask](https://blog.miguelgrinberg.com/post/restful-authentication-with-flask)
 * [RESTful Authentication with Flask](https://blog.miguelgrinberg.com/post/restful-authentication-with-flask) by Miguel Grinberg.
 * [Using Python, Flask, and Angular to Build Modern](https://auth0.com/blog/using-python-flask-and-angular-to-build-modern-apps-part-1/) by Bruno Krebs.
+* [Build a CRUD Web App With Python and Flask](https://scotch.io/tutorials/build-a-crud-web-app-with-python-and-flask-part-one) by Mbithe Nzomo.
 
 ## Setup Environment
 

@@ -1,7 +1,10 @@
 from flask import jsonify, abort, request, g, url_for
+from marshmallow import ValidationError
+
 from app import auth, db
 from app.user import bp
-from app.models import User, UserSchema
+from app.models import User
+from app.schemas import UserSchema, UserRegistrationSchema
 import app.user.user_service as user_service
 
 #
@@ -9,9 +12,13 @@ import app.user.user_service as user_service
 #
 @bp.route('/registerUser', methods=['POST'])
 def register_user():
-    user = user_service.register(UserSchema().load(request.get_json()).data, request.json.get('password'))
-    return (UserSchema().dump(user).data, 201,
-            {'Location': url_for('user.get_user', username=user.username, _external=True)})
+    try:
+        body = UserRegistrationSchema().load(request.get_json())
+        user = user_service.register(body, request.json.get('password'))
+        return (UserSchema().dump(user), 201,
+                {'Location': url_for('user.get_user', username=user.username, _external=True)})
+    except ValidationError as err:
+        return err.messages, 500
 
 
 #
@@ -23,7 +30,7 @@ def get_me():
     user = User.query.filter_by(username=g.user.username).first()
     if not user:
         abort(404)
-    return jsonify(UserSchema().dump(user).data)
+    return jsonify(UserSchema().dump(user))
 
 
 #
@@ -35,7 +42,7 @@ def get_user(username):
     user = User.query.filter_by(username=username).first()
     if not user:
         abort(404)
-    return jsonify(UserSchema().dump(user).data)
+    return jsonify(UserSchema().dump(user))
 
 
 #
@@ -47,7 +54,7 @@ def get_users():
     users = User.query.all()
     if not users:
         abort(404)
-    return jsonify(UserSchema().dump(users, many=True).data)
+    return jsonify(UserSchema().dump(users, many=True))
 
 
 #
