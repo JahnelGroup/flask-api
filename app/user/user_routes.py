@@ -2,29 +2,15 @@ from flask import jsonify, abort, request, g, url_for
 from app import auth, db
 from app.user import bp
 from app.models import User, UserSchema
-import app.user.user_service as users_service
-
-user_schema = UserSchema()
-users_schema = UserSchema(many=True)
+import app.user.user_service as user_service
 
 #
 # Create a user
 #
 @bp.route('/registerUser', methods=['POST'])
 def register_user():
-    username = request.json.get('username')
-    password = request.json.get('password')
-    email = request.json.get('email')
-    if username is None or password is None or email is None:
-        abort(400)  # missing arguments
-    if User.query.filter_by(username=username).first() is not None:
-        abort(400)  # existing user
-    user = User(username=username, email=email)
-    user.set_password(password)
-    db.session.add(user)
-    db.session.commit()
-
-    return (user_schema.dump(user).data, 201,
+    user = user_service.register(UserSchema().load(request.get_json()).data, request.json.get('password'))
+    return (UserSchema().dump(user).data, 201,
             {'Location': url_for('user.get_user', username=user.username, _external=True)})
 
 
@@ -37,7 +23,7 @@ def get_me():
     user = User.query.filter_by(username=g.user.username).first()
     if not user:
         abort(404)
-    return jsonify(user_schema.dump(user).data)
+    return jsonify(UserSchema().dump(user).data)
 
 
 #
@@ -49,7 +35,7 @@ def get_user(username):
     user = User.query.filter_by(username=username).first()
     if not user:
         abort(404)
-    return jsonify(user_schema.dump(user).data)
+    return jsonify(UserSchema().dump(user).data)
 
 
 #
@@ -61,7 +47,7 @@ def get_users():
     users = User.query.all()
     if not users:
         abort(404)
-    return jsonify(users_schema.dump(users).data)
+    return jsonify(UserSchema().dump(users, many=True).data)
 
 
 #
@@ -70,10 +56,5 @@ def get_users():
 @bp.route('/users/me', methods=['DELETE'])
 @auth.login_required
 def remove_user():
-    user = User.query.filter_by(username=g.user.username).first()
-    if user is None:
-        abort(404)  # missing arguments
-
-    db.session.delete(user)
-    db.session.commit()
+    user_service.delete_by_username(g.user.username)
     return '', 200
