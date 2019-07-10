@@ -1,4 +1,4 @@
-from app import db
+from app import db, ma
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
@@ -39,9 +39,8 @@ class User(db.Model):
         user = User.query.get(data['id'])
         return user
 
-    @property
-    def serialize(self):
-        return {
-            "username": self.username,
-            "email": self.email
-        }
+
+class UserSchema(ma.ModelSchema):
+    class Meta:
+        model = User
+        exclude = ['password']

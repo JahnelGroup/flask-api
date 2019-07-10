@@ -1,8 +1,10 @@
 from flask import jsonify, abort, request, g, url_for
 from app import auth, db
 from app.users import bp
-from app.models import User
+from app.models import User, UserSchema
 
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
 
 #
 # Create a user
@@ -20,7 +22,8 @@ def register_user():
     user.set_password(password)
     db.session.add(user)
     db.session.commit()
-    return (jsonify(user.serialize), 201,
+
+    return (user_schema.dump(user).data, 201,
             {'Location': url_for('users.get_user', username=user.username, _external=True)})
 
 
@@ -33,7 +36,7 @@ def get_me():
     user = User.query.filter_by(username=g.user.username).first()
     if not user:
         abort(404)
-    return jsonify(user.serialize)
+    return jsonify(user_schema.dump(user).data)
 
 
 #
@@ -45,7 +48,19 @@ def get_user(username):
     user = User.query.filter_by(username=username).first()
     if not user:
         abort(404)
-    return jsonify(user.serialize)
+    return jsonify(user_schema.dump(user).data)
+
+
+#
+# Get all users
+#
+@bp.route('/users')
+@auth.login_required
+def get_users():
+    users = User.query.all()
+    if not users:
+        abort(404)
+    return jsonify(users_schema.dump(users).data)
 
 
 #
