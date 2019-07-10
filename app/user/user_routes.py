@@ -1,7 +1,7 @@
 from flask import jsonify, abort, request, g, url_for
 from marshmallow import ValidationError
 
-from app import auth, db
+from app import auth
 from app.user import bp
 from app.models import User
 from app.schemas import UserSchema, UserRegistrationSchema
@@ -58,7 +58,7 @@ def get_users():
 
 
 #
-# Remove user
+# Remove my account
 #
 @bp.route('/users/me', methods=['DELETE'])
 @auth.login_required

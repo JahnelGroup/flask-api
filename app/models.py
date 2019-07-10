@@ -18,8 +18,8 @@ class BaseModel(db.Model):
 # UserType
 #
 class UserType(enum.Enum):
-    ADMIN = "admin"
-    USER = "user"
+    admin = "admin"
+    user = "user"
 
 
 #
