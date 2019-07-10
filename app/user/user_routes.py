@@ -39,6 +39,10 @@ def get_me():
 @bp.route('/users/<string:username>')
 @auth.login_required
 def get_user(username):
+
+    if g.user.username != username and not g.user.is_admin():
+        abort(401)
+
     user = User.query.filter_by(username=username).first()
     if not user:
         abort(404)
