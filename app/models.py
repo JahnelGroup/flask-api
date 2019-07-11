@@ -1,6 +1,7 @@
 from app import db
 
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy_utils import Timestamp
 import enum
 
 
@@ -15,11 +16,8 @@ class UserType(enum.Enum):
 #
 # Model: Base
 #
-class BaseModel(db.Model):
+class BaseModel(db.Model, Timestamp):
     __abstract__ = True
-
-    created_on = db.Column(db.DateTime, default=db.func.now())
-    updated_on = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
 
 #
