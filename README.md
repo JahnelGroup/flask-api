@@ -121,6 +121,7 @@ $ flask shell
 
 
 
-# Questions
+# TODO
 
-* How do you inject things from the application context into classes like the secret key into the user model?
+* Excerpt of related entities (i.e., POSTS)
+* Decorators

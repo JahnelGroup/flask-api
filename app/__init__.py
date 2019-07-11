@@ -5,12 +5,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_cors import CORS
+import app.decorators as api_service
 
 
 db = SQLAlchemy()
 migrate = Migrate()
 auth = HTTPBasicAuth()
 ma = Marshmallow()
+api = api_service
 
 
 def create_app(config_class=Config):

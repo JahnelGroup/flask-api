@@ -1,6 +1,6 @@
 from flask import g, current_app
 from app import db
-from app.models import User, UserType
+from app.models import User, UserType, Post
 
 
 #
@@ -31,3 +31,13 @@ def delete_by_username(username):
     db.session.delete(user)
     db.session.commit()
     return True
+
+
+#
+# Add a post to user
+#
+def add_post(user, message):
+    post = Post(user_id=user.id, message=message)
+    db.session.add(post)
+    db.session.commit()
+    return post

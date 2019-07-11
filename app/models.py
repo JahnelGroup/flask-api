@@ -1,3 +1,5 @@
+from sqlalchemy.orm import relationship
+
 from app import db
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -29,6 +31,7 @@ class User(BaseModel):
     email = db.Column(db.String(120), index=True, unique=True)
     password = db.Column(db.String(128))
     type = db.Column(db.String(128))
+    posts = relationship("Post")
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -46,3 +49,15 @@ class User(BaseModel):
 
     def is_admin(self):
         return self.type == UserType.admin.value
+
+
+#
+# Model: Post
+#
+class Post(BaseModel):
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.String(256))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return '<Post {}>'.format(self.username)
