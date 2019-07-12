@@ -8,7 +8,7 @@ from app.user import bp
 from flask import jsonify, abort, request, g
 from marshmallow import ValidationError
 from app import filters
-from app.models import User
+from app.models import User, Post
 from app.schemas import UserSchema, PostSchema
 import app.user.user_service as user_service
 
@@ -20,7 +20,7 @@ import app.user.user_service as user_service
 @filters.is_admin
 def get_users():
     users = User.query.all()
-    return jsonify(UserSchema().dump(users, many=True))
+    return UserSchema().jsonify(users, many=True)
 
 
 #
@@ -42,7 +42,7 @@ def get_user(username):
     user = User.query.filter_by(username=username).first()
     if not user:
         abort(404)
-    return jsonify(UserSchema().dump(user))
+    return UserSchema().jsonify(user)
 
 
 #
@@ -68,3 +68,19 @@ def add_post():
         return PostSchema().dump(post), 201
     except ValidationError as err:
         return err.messages, 500
+
+
+#
+# Get all my posts
+#
+@bp.route('/users/me/posts')
+def get_posts():
+    return PostSchema().jsonify(Post.query.filter_by(user_id=g.user.id), many=True)
+
+
+#
+# Get a post
+#
+@bp.route('/users/me/posts/<int:post_id>')
+def get_post(post_id):
+    return Post.query.get_or_404(post_id)

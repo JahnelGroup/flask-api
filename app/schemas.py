@@ -7,11 +7,9 @@ from marshmallow import fields, validates, ValidationError
 # Common representation of a User
 #
 class UserSchema(ma.ModelSchema):
-    posts = fields.Nested('PostSchema', many=True)
-
     class Meta:
         model = User
-        exclude = ['password']
+        exclude = ['password', 'posts']
 
 
 #
