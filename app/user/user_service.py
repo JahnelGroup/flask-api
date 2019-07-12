@@ -3,6 +3,13 @@ from app.models import User, Post
 
 
 #
+# Get user by username
+#
+def get_by_username(username):
+    return User.query.filter_by(username=username).first()
+
+
+#
 # Save a user
 #
 def save(user):
@@ -15,7 +22,7 @@ def save(user):
 # Delete a user by username
 #
 def delete_by_username(username):
-    user = User.query.filter_by(username=username).first()
+    user = get_by_username(username)
     db.session.delete(user)
     db.session.commit()
     return True
@@ -29,3 +36,13 @@ def add_post(user, message):
     db.session.add(post)
     db.session.commit()
     return post
+
+
+#
+# Remove post
+#
+def delete_post(user, post_id):
+    post = Post.query.get_or_404(post_id)
+    db.session.delete(post)
+    db.session.commit()
+    return True

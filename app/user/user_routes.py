@@ -24,21 +24,10 @@ def get_users():
 
 
 #
-# Get current logged in user
-#
-@bp.route('/users/me')
-def get_me():
-    return get_user(g.user.username)
-
-
-#
-# Get a user by username
+# Get user by username
 #
 @bp.route('/users/<string:username>')
 def get_user(username):
-    if g.user.username != username and not g.user.is_admin():
-        abort(401)
-
     user = User.query.filter_by(username=username).first()
     if not user:
         abort(404)
@@ -46,16 +35,19 @@ def get_user(username):
 
 
 #
-# Remove my account
+# Remove user by username
 #
-@bp.route('/users/me', methods=['DELETE'])
-def remove_user():
-    user_service.delete_by_username(g.user.username)
+@bp.route('/users/<string:username>', methods=['DELETE'])
+def remove_user(username):
+    if g.user.username != username and not g.user.is_admin():
+        abort(401)
+
+    user_service.delete_by_username(username)
     return '', 200
 
 
 #
-# Submit a post
+# Submit a post for me
 #
 @bp.route('/users/me/posts', methods=['POST'])
 def add_post():
@@ -71,16 +63,34 @@ def add_post():
 
 
 #
-# Get all my posts
+# Get posts by username
 #
-@bp.route('/users/me/posts')
-def get_posts():
-    return PostSchema().jsonify(Post.query.filter_by(user_id=g.user.id), many=True)
+@bp.route('/users/<string:username>/posts')
+def get_user_posts(username):
+    user = user_service.get_by_username(username)
+    return PostSchema().jsonify(Post.query.filter_by(user_id=user.id), many=True)
 
 
 #
-# Get a post
+# Get post by id
 #
-@bp.route('/users/me/posts/<int:post_id>')
-def get_post(post_id):
-    return Post.query.get_or_404(post_id)
+@bp.route('/users/<string:username>/posts/<int:post_id>')
+def get_post(username, post_id):
+    return PostSchema().jsonify(Post.query.get_or_404(post_id))
+
+
+#
+# Remove post by id
+#
+@bp.route('/users/<string:username>/posts/<int:post_id>', methods=['DELETE'])
+def remove_post(username, post_id):
+    if g.user.username != username and not g.user.is_admin():
+        abort(401)
+
+    user = user_service.get_by_username(username)
+    post = Post.query.get_or_404(post_id)
+    if post.user_id != user.id:
+        abort(401)
+
+    user_service.delete_post(user, post_id)
+    return '', 200
