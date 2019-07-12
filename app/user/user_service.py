@@ -1,17 +1,5 @@
-from flask import g, current_app
 from app import db
-from app.models import User, UserType, Post
-
-
-#
-# Register a new user
-#
-def register(user, password):
-    user.id = None
-    user.set_password(password)
-    db.session.add(user)
-    db.session.commit()
-    return user
+from app.models import User, Post
 
 
 #

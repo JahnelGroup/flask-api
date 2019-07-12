@@ -1,6 +1,12 @@
+#
+# Blueprint: Authentication
+#
+# >> Make sure to import bp as the correct blueprint <<
+#
+from app.authentication import bp
+
 from flask import jsonify, g
 from app import auth
-from app.authentication import bp
 import app.authentication.authentication_service as auth_service
 
 #

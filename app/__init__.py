@@ -5,14 +5,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_cors import CORS
-import app.decorators as api_service
+import app.filters as filters_util
 
 
 db = SQLAlchemy()
 migrate = Migrate()
 auth = HTTPBasicAuth()
 ma = Marshmallow()
-api = api_service
+filters = filters_util
 
 
 def create_app(config_class=Config):
@@ -28,6 +28,9 @@ def create_app(config_class=Config):
 
     from app.authentication import bp as authentication_bp
     application.register_blueprint(authentication_bp, url_prefix="/api")
+
+    from app.registration import bp as registration_bp
+    application.register_blueprint(registration_bp, url_prefix="/api")
 
     from app.user import bp as user_bp
     application.register_blueprint(user_bp, url_prefix="/api")

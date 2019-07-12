@@ -1,3 +1,8 @@
+#
+# Blueprint: Error
+#
+# >> Make sure to import bp as the correct blueprint <<
+#
 from app.error import bp
 from app import db
 
