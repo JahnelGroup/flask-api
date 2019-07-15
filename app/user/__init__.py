@@ -14,10 +14,11 @@ def restrict_bp_to_admins():
 # Translate 'me' to username
 @bp.before_request
 def translate_me_to_username():
-    if 'username' in request.view_args:
-        username = request.view_args['username']
-        if username == 'me':
-            request.view_args['username'] = g.user.username
+    if request.method != 'OPTIONS':
+        if 'username' in request.view_args:
+            username = request.view_args['username']
+            if username == 'me':
+                request.view_args['username'] = g.user.username
 
 
 from app.user import user_service, user_routes
