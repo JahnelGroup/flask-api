@@ -35,7 +35,7 @@ def create_app(config_class=Config):
     from app.user import bp as user_bp
     application.register_blueprint(user_bp, url_prefix="/api")
 
-    CORS(application, resources={r"/*": {"origins": "http://localhost:4200"}})
+    CORS(application, resources={r"/*": {"origins": "*"}})
 
     return application
 

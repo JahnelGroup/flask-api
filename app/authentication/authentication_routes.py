@@ -7,8 +7,7 @@ from app.authentication import bp
 
 from flask import jsonify, g
 from app import auth
-import app.authentication.authentication_service as auth_service
-
+from app.authentication import authentication_service as auth_service
 #
 # Generate a new API token
 #

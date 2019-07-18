@@ -10,7 +10,7 @@ from marshmallow import ValidationError
 from app import filters
 from app.models import User, Post
 from app.schemas import UserSchema, PostSchema
-import app.user.user_service as user_service
+from app.user import user_service as user_service
 
 
 #
