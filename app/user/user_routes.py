@@ -5,7 +5,7 @@
 #
 from app.user import bp
 
-from flask import jsonify, abort, request, g
+from flask import jsonify, abort, request, g, current_app
 from marshmallow import ValidationError
 from app import filters
 from app.models import User, Post
@@ -63,6 +63,13 @@ def add_post():
 
 
 #
+# Get all posts by all users (FOR TESTING)
+#
+@bp.route('users/<string:username>/posts/all')
+def get_all_posts(username):
+    return PostSchema().jsonify(Post.query.all(), many=True)
+
+#
 # Get posts by username
 #
 @bp.route('/users/<string:username>/posts')
@@ -85,11 +92,13 @@ def get_post(username, post_id):
 @bp.route('/users/<string:username>/posts/<int:post_id>', methods=['DELETE'])
 def remove_post(username, post_id):
     if g.user.username != username and not g.user.is_admin():
+        current_app.logger.error("Attempted post removal by {} of someone else's post".format(g.user.username))
         abort(401)
 
     user = user_service.get_by_username(username)
     post = Post.query.get_or_404(post_id)
     if post.user_id != user.id:
+        current_app.logger.error("User {} is not the poster of post {}".format(username, post.id))
         abort(401)
 
     user_service.delete_post(user, post_id)

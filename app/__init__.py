@@ -5,7 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_cors import CORS
+from flask.logging import default_handler
 import app.filters as filters_util
+import logging
 
 
 db = SQLAlchemy()
@@ -36,6 +38,16 @@ def create_app(config_class=Config):
     application.register_blueprint(user_bp, url_prefix="/api")
 
     CORS(application, resources={r"/*": {"origins": "*"}})
+
+    application.logger.setLevel('INFO') # Configurable log level
+
+    # Remove default logger
+    application.logger.removeHandler(default_handler)
+
+    # Doing this duplicates the log stream, but allows for custom logs
+    lh = logging.StreamHandler()
+    lh.setFormatter(logging.Formatter("level \"%(levelname)s\", %(message)s"))
+    application.logger.addHandler(lh)
 
     return application
 

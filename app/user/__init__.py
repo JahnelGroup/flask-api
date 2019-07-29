@@ -1,4 +1,4 @@
-from flask import Blueprint, request, g
+from flask import Blueprint, request, g, current_app
 from app import auth
 
 bp = Blueprint('user', __name__)
@@ -19,6 +19,7 @@ def translate_me_to_username():
             username = request.view_args['username']
             if username == 'me':
                 request.view_args['username'] = g.user.username
+
 
 
 from app.user import user_service, user_routes

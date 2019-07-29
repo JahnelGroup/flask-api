@@ -13,7 +13,7 @@ def not_found_error(error):
 
 
 @bp.app_errorhandler(401)
-def not_found_error(error):
+def unauthorized_error(error):
     return 'Unauthorized', 401
 
 
