@@ -25,11 +25,6 @@ class UserRegistrationSchema(ma.ModelSchema):
     password2 = fields.String(require=True, load_only=True)
     type = fields.String(required=True)
 
-    @validates("type")
-    def validate_quantity(self, value):
-        if value not in UserType.__members__:
-            raise ValidationError("Invalid value.")
-
     @validates_schema
     def validate_registration(self, data, **kwargs):
         # Create error
@@ -69,6 +64,10 @@ class UserRegistrationSchema(ma.ModelSchema):
             valerr.messages["password2"] = "Passwords must match."
             foundError = True
 
+        if "type" not in userinfo or userinfo["type"] not in UserType.__members__:
+            valerr.messages["type"] = "Invalid value."
+            foundError = True
+
         if foundError:
             raise valerr
 
@@ -80,5 +79,12 @@ class UserRegistrationSchema(ma.ModelSchema):
 # Common representation of a Post
 #
 class PostSchema(ma.ModelSchema):
+    class Meta:
+        model = Post
+
+
+class PostWithUser(ma.ModelSchema):
+    username = fields.String(required=True)
+    post = fields.Nested(PostSchema)
     class Meta:
         model = Post

@@ -4,8 +4,12 @@ from app import db
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy_utils import Timestamp
+from sqlalchemy_continuum import make_versioned
+import sqlalchemy as sa
+
 import enum
 
+make_versioned(user_cls=None)
 
 #
 # Enum: User Type
@@ -55,9 +59,12 @@ class User(BaseModel):
 # Model: Post
 #
 class Post(BaseModel):
+    __versioned__ = {}
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(256))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return '<Post {}>'.format(self.username)
+        return '<Post {}>'.format(self.message)
+
+sa.orm.configure_mappers()

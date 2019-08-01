@@ -7,9 +7,9 @@ from app.user import bp
 
 from flask import jsonify, abort, request, g, current_app
 from marshmallow import ValidationError
-from app import filters
-from app.models import User, Post
-from app.schemas import UserSchema, PostSchema
+from app import filters, db
+from app.models import User, UserType, Post
+from app.schemas import UserSchema, PostSchema, PostWithUser
 from app.user import user_service as user_service
 
 
@@ -67,7 +67,10 @@ def add_post():
 #
 @bp.route('users/<string:username>/posts/all')
 def get_all_posts(username):
-    return PostSchema().jsonify(Post.query.all(), many=True)
+    r = db.session.query(Post.message, Post.created, Post.id, User.username).outerjoin(User, Post.user_id == User.id).all()
+    return PostWithUser().jsonify(r, many=True)
+
+    # return PostSchema().jsonify(Post.query.all(), many=True)
 
 #
 # Get posts by username
@@ -97,9 +100,12 @@ def remove_post(username, post_id):
 
     user = user_service.get_by_username(username)
     post = Post.query.get_or_404(post_id)
-    if post.user_id != user.id:
+    isAdmin = user.type in UserType.__members__ and UserType.__members__[user.type] == UserType.admin
+    if post.user_id != user.id and not isAdmin:
         current_app.logger.error("User {} is not the poster of post {}".format(username, post.id))
         abort(401)
+
+    current_app.logger.info("Sucessful deletion of post {} by {} {}".format(post.id, "admin" if isAdmin else "user", user.username))
 
     user_service.delete_post(user, post_id)
     return '', 200
