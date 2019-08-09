@@ -8,7 +8,7 @@ from app.user import bp
 from flask import jsonify, abort, request, g, current_app
 from marshmallow import ValidationError
 from app import filters, db
-from app.models import User, UserType, Post
+from app.models import User, UserType, Post, Activity
 from app.schemas import UserSchema, PostSchema, PostWithUser
 from app.user import user_service as user_service
 
@@ -57,6 +57,7 @@ def add_post():
             abort(404)
 
         post = user_service.add_post(g.user, message)
+
         return PostSchema().dump(post), 201
     except ValidationError as err:
         return err.messages, 500

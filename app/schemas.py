@@ -81,6 +81,7 @@ class UserRegistrationSchema(ma.ModelSchema):
 class PostSchema(ma.ModelSchema):
     class Meta:
         model = Post
+        exclude = ['versions']
 
 
 class PostWithUser(ma.ModelSchema):

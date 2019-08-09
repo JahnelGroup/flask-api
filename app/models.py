@@ -5,11 +5,15 @@ from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy_utils import Timestamp
 from sqlalchemy_continuum import make_versioned
+from sqlalchemy_continuum.plugins import ActivityPlugin;
 import sqlalchemy as sa
 
 import enum
 
-make_versioned(user_cls=None)
+# Setup Activity Plugin
+activity_plugin = ActivityPlugin()
+make_versioned(plugins=[activity_plugin])
+
 
 #
 # Enum: User Type
@@ -68,3 +72,4 @@ class Post(BaseModel):
         return '<Post {}>'.format(self.message)
 
 sa.orm.configure_mappers()
+Activity = activity_plugin.activity_cls

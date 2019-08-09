@@ -1,5 +1,6 @@
 from app import db
-from app.models import User, Post
+from flask import current_app
+from app.models import User, Post, Activity
 
 
 #
@@ -34,6 +35,9 @@ def delete_by_username(username):
 def add_post(user, message):
     post = Post(user_id=user.id, message=message)
     db.session.add(post)
+    db.session.flush()
+    activity = Activity(verb='create', object=post)
+    db.session.add(activity)
     db.session.commit()
     return post
 
@@ -44,5 +48,8 @@ def add_post(user, message):
 def delete_post(user, post_id):
     post = Post.query.get_or_404(post_id)
     db.session.delete(post)
+    db.session.flush()
+    activity = Activity(verb='delete', object=post)
+    db.session.add(activity)
     db.session.commit()
     return True
